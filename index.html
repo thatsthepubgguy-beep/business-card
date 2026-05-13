@@ -528,7 +528,7 @@
   function handleSave(e) {
     e.preventDefault();
     // vCard content
-    const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:Kaleab Abera\nTITLE:Website Developer & Vedio editor\ncontact:+251933818601\nORG:AK Digital Marketing\nURL:https://thatsthepubgguy-beep.github.io/portifolio/\nEND:VCARD`;
+    const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:Kaleab Abera\nTITLE:Website Developer & Vedio editor\ncontact:+251933818601\nORG:AK Digital Marketing\nURL:https://thatsthepubgguy-beep.github.io/portifolio\nEND:VCARD`;
     const blob = new Blob([vcard], { type: 'text/vcard' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
