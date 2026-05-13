@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kaleab Abera – Digital Business Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #b3cbf1;
+    --card:      #0e1520f1;
+    --card2:     #15316099;
+    --border:    rgba(70, 82, 101, 0.12);
+    --accent:    #25406c;
+    --accent2:   #26346b;
+    --accent-glow: rgba(43, 54, 113, 0.25);
+    --text:      #e8f4ff;
+    --muted:     #68a7c2;
+    --label:     #a0bdd4;
+    --r:         18px;
+  }
+
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    padding: 24px 16px;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% -10%, rgba(0, 98, 255, 0.1) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 80%, rgba(10, 65, 245, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border-radius: 32px;
+    border: 1px solid var(--border);
+    padding: 36px 20px 28px;
+    box-shadow:
+      0 0 0 1px rgba(0,200,255,0.05),
+      0 24px 80px rgba(0,0,0,0.7),
+      0 0 120px rgba(0,200,255,0.04);
+    animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .header { text-align: center; margin-bottom: 28px; }
+
+  .avatar-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 16px;
+  
+  }
+  .avatar-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    z-index: 0;
+    animation: spin 6s linear infinite;
+   
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .avatar-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+    z-index: -1;
+    animation: pulse 3s ease-in-out infinite;
+ 
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.5; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.08); }
+  }
+  .avatar {
+    position: relative;
+    z-index: 1;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--bg);
+    background: linear-gradient(135deg, #1a2d45, #0e1d30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    
+  }
+  .avatar-placeholder {
+    position: relative;
+    z-index: 1;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+    background: linear-gradient(135deg, #1a2d45, #0e1d30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    overflow: hidden;
+  }
+
+  .name-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-bottom: 5px;
+  }
+  .name {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .badge svg { width: 11px; height: 11px; }
+
+  .title {
+    color: var(--label);
+    font-size: 13.5px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .companies {
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .companies span {
+    color: var(--accent);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .companies span:hover { color: var(--accent2); }
+  .companies .sep { color: var(--muted); margin: 0 4px; }
+
+  /* ── Buttons ── */
+  .links { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+  .link-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease both;
+  }
+  .link-btn:nth-child(1) { animation-delay: 0.15s; }
+  .link-btn:nth-child(2) { animation-delay: 0.22s; }
+  .link-btn:nth-child(3) { animation-delay: 0.29s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .link-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.05), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+  .link-btn:hover::before { transform: translateX(100%); }
+  .link-btn:hover {
+    border-color: rgba(0, 55, 255, 0.35);
+    background: rgba(157, 0, 255, 0.06);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(255, 25, 0, 0.12);
+  }
+
+  .link-btn.active {
+    background: linear-gradient(135deg, rgba(136, 0, 255, 0.15), rgba(10,245,200,0.08));
+    border-color: rgba(34, 0, 255, 0.45);
+    box-shadow: 0 0 0 1px rgba(0, 149, 255, 0.2), 0 8px 32px rgba(0,200,255,0.15);
+  }
+
+  .icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,200,255,0.1);
+    border: 1px solid rgba(0,200,255,0.2);
+    flex-shrink: 0;
+    font-size: 18px;
+    color: var(--accent);
+    transition: all 0.25s;
+  }
+  .link-btn.active .icon-box {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-color: transparent;
+    color: #000;
+    box-shadow: 0 4px 16px var(--accent-glow);
+  }
+  .link-btn:hover .icon-box {
+    background: rgba(162, 0, 255, 0.18);
+    box-shadow: 0 0 12px rgba(93, 0, 255, 0.2);
+  }
+
+  .link-text { flex: 1; min-width: 0; }
+  .link-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-btn.active .link-sub { color: var(--label); }
+
+  .arrow {
+    color: var(--muted);
+    font-size: 16px;
+    transition: transform 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .link-btn:hover .arrow { transform: translateX(3px); color: var(--accent); }
+
+  /* ── Services Grid ── */
+  .services {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px;
+    animation: fadeIn 0.5s 0.36s ease both;
+  }
+  .services-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .services-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .service-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 6px;
+    background: rgba(0,200,255,0.04);
+    border: 1px solid rgba(0,200,255,0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .service-item:hover {
+    background: rgba(166, 0, 255, 0.1);
+    border-color: rgba(0, 81, 255, 0.993);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 8, 0, 0.12);
+  }
+  .service-icon {
+    font-size: 20px;
+    color: var(--accent);
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+  }
+  .service-label {
+    font-size: 10px;
+    color: var(--label);
+    text-align: center;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 20px 0 16px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    animation: fadeIn 0.5s 0.45s ease both;
+  }
+  .footer-link {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .footer-link:hover { color: var(--accent); }
+  .footer-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+
+  /* Responsive */
+  @media (max-width: 360px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .name { font-size: 20px; }
+    .card { padding: 28px 16px 22px; }
+  }
+  @media (min-width: 600px) {
+    .card { border-radius: 36px; padding: 44px 32px 32px; }
+  }
+  img{background-size: cover;
+  overflow: hidden;
+  margin-top: 21px;}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="avatar-wrap">
+      <div class="avatar-placeholder"><img src="Screenshot_20260511_172249_Chrome-2.jpg" alt=""></div>
+    </div>
+    <div class="name-row">
+      <span class="name">Kaleab Abera</span>
+      <span class="badge">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M5 13l4 4L19 7" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </div>
+    <p class="title">Website Developer &amp; Video editor</p>
+    <p class="companies">
+      <span class="sep">·</span>
+      <span>AK Digital Marketing</span>
+      <span class="sep">·</span>
+      <span></span>
+      <span class="sep"></span>
+    </p>
+  </div>
+
+  <!-- Links -->
+  <div class="links">
+
+    <a href="#" class="link-btn" onclick="handleSave(event)">
+      <div class="icon-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">Save my contact</div>
+        <div class="link-sub">One-tap save to phone</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+    <a href="https://thatsthepubgguy-beep.github.io/portifolio/" target="_blank" class="link-btn active">
+      <div class="icon-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">AK Digital Marketing</div>
+        <div class="link-sub">Custom websites &amp; digital solutions</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+    <a href="https://thatsthepubgguy-beep.github.io/portifolio/" class="link-btn">
+      <div class="icon-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <div class="link-title">My portifolio</div>
+        <div class="link-sub">click</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+
+  </div>
+
+  <!-- Services -->
+  <div class="services">
+    <div class="services-title">My Services</div>
+    <div class="services-sub">What I can build for you</div>
+    <div class="services-grid">
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <span class="service-label">Website Design</span>
+      </div>
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <span class="service-label">Portifolio websites</span>
+      </div>
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <span class="service-label">Digital Business cards</span>
+      </div>
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <span class="service-label">Motion Graphic videos</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="portifolio" target="_blank" class="footer-link">
+      <span class="footer-dot"></span>
+      AK Digital Marketing
+    </a>
+  </div>
+
+</div>
+
+<script>
+  function handleSave(e) {
+    e.preventDefault();
+    // vCard content
+    const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:Kaleab Abera\nTITLE:Website Developer & Vedio editor\ncontact:+251933818601\nORG:AK Digital Marketing\nURL:https://yegeta.zemendigital.com\nEND:VCARD`;
+    const blob = new Blob([vcard], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Kaleab abera.vcf';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
