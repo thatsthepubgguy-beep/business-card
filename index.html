@@ -1,542 +1,832 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kaleab Abera – Digital Business Card</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>KALEAB ABERA – Links</title>
+  <!-- Preconnect for faster font load -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-  :root {
-    --bg:        #b3cbf1;
-    --card:      #0e1520f1;
-    --card2:     #15316099;
-    --border:    rgba(70, 82, 101, 0.12);
-    --accent:    #25406c;
-    --accent2:   #26346b;
-    --accent-glow: rgba(43, 54, 113, 0.25);
-    --text:      #e8f4ff;
-    --muted:     #68a7c2;
-    --label:     #a0bdd4;
-    --r:         18px;
-  }
+    :root {
+      --bg: #0e0929;
+      --accent: #92acff;
+      --accent-hi: #b8cafe;
+      --accent-deep: #1e1850;
+      --accent-glow: rgba(146, 172, 255, .4);
+      --text: #e8eeff;
+      --text-soft: #92acff;
+      --muted: #5566aa;
+      --r: 22px;
+    }
 
-  body {
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DM Sans', sans-serif;
-    padding: 24px 16px;
-    overflow-x: hidden;
-  }
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      padding: 32px 16px;
+      overflow-x: hidden;
+    }
 
-  /* Ambient background glow */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% -10%, rgba(0, 98, 255, 0.1) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 80% 80%, rgba(10, 65, 245, 0.06) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
+    /* ── Gradient overlays (cheap, no filter cost) ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% -5%, rgba(146, 172, 255, .12) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 45% at 85% 85%, rgba(30, 24, 80, .09) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-  .card {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 420px;
-    background: var(--card);
-    border-radius: 32px;
-    border: 1px solid var(--border);
-    padding: 36px 20px 28px;
-    box-shadow:
-      0 0 0 1px rgba(0,200,255,0.05),
-      0 24px 80px rgba(0,0,0,0.7),
-      0 0 120px rgba(0,200,255,0.04);
-    animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
-  }
+    /* ── Liquid blobs — GPU-composited only (transform+opacity) ── */
+    .liquid-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    .liq-blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: .55;
+      will-change: transform;
+      /* promote to own layer */
+      /* blur applied once via filter, morphing done only with transform */
+      filter: blur(55px);
+    }
 
-  /* ── Header ── */
-  .header { text-align: center; margin-bottom: 28px; }
+    /* FIX: merge morph+drift into one animation per blob to avoid transform conflict */
+    .liq-blob-1 {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle at 35% 35%, rgba(146, 172, 255, .55), rgba(30, 24, 80, .2));
+      top: -100px;
+      left: -80px;
+      animation: blob1 18s ease-in-out infinite alternate;
+    }
 
-  .avatar-wrap {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 16px;
-  
-  }
-  .avatar-wrap::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    z-index: 0;
-    animation: spin 6s linear infinite;
-   
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-  .avatar-wrap::after {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--accent-glow), transparent 70%);
-    z-index: -1;
-    animation: pulse 3s ease-in-out infinite;
- 
-  }
-  @keyframes pulse {
-    0%,100% { opacity: 0.5; transform: scale(1); }
-    50%      { opacity: 1;   transform: scale(1.08); }
-  }
-  .avatar {
-    position: relative;
-    z-index: 1;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--bg);
-    background: linear-gradient(135deg, #1a2d45, #0e1d30);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    
-  }
-  .avatar-placeholder {
-    position: relative;
-    z-index: 1;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    border: 3px solid var(--bg);
-    background: linear-gradient(135deg, #1a2d45, #0e1d30);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    overflow: hidden;
-  }
+    .liq-blob-2 {
+      width: 320px;
+      height: 350px;
+      background: radial-gradient(circle at 65% 30%, rgba(100, 130, 220, .35), rgba(20, 16, 60, .15));
+      bottom: -80px;
+      right: -50px;
+      animation: blob2 22s ease-in-out infinite alternate;
+      animation-delay: -6s;
+    }
 
-  .name-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    margin-bottom: 5px;
-  }
-  .name {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .badge svg { width: 11px; height: 11px; }
+    .liq-blob-3 {
+      width: 250px;
+      height: 280px;
+      background: radial-gradient(circle at 50% 60%, rgba(146, 172, 255, .35), rgba(20, 16, 60, .1));
+      top: 35%;
+      left: 55%;
+      animation: blob3 16s ease-in-out infinite alternate;
+      animation-delay: -3s;
+    }
 
-  .title {
-    color: var(--label);
-    font-size: 13.5px;
-    font-weight: 400;
-    margin-bottom: 6px;
-  }
-  .companies {
-    font-size: 12.5px;
-    font-weight: 500;
-  }
-  .companies span {
-    color: var(--accent);
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  .companies span:hover { color: var(--accent2); }
-  .companies .sep { color: var(--muted); margin: 0 4px; }
+    .liq-blob-4 {
+      width: 200px;
+      height: 220px;
+      background: radial-gradient(circle at 40% 40%, rgba(146, 172, 255, .25), transparent);
+      top: 25%;
+      left: -40px;
+      animation: blob4 25s ease-in-out infinite alternate;
+      animation-delay: -9s;
+    }
 
-  /* ── Buttons ── */
-  .links { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    /* Each blob animation combines translate + scale (no rotate = no repaint) */
+    @keyframes blob1 {
+      0% {
+        transform: translate(0, 0) scale(1);
+        border-radius: 62% 38% 68% 32%/52% 64% 36% 68%
+      }
 
-  .link-btn {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.25s ease;
-    position: relative;
-    overflow: hidden;
-    animation: fadeIn 0.5s ease both;
-  }
-  .link-btn:nth-child(1) { animation-delay: 0.15s; }
-  .link-btn:nth-child(2) { animation-delay: 0.22s; }
-  .link-btn:nth-child(3) { animation-delay: 0.29s; }
+      33% {
+        transform: translate(30px, -22px) scale(1.06);
+        border-radius: 42% 72% 28% 64%/72% 38% 64% 48%
+      }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateX(-12px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
+      66% {
+        transform: translate(-15px, 18px) scale(.95);
+        border-radius: 72% 28% 55% 58%/38% 72% 48% 62%
+      }
 
-  .link-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.05), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
-  }
-  .link-btn:hover::before { transform: translateX(100%); }
-  .link-btn:hover {
-    border-color: rgba(0, 55, 255, 0.35);
-    background: rgba(157, 0, 255, 0.06);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(255, 25, 0, 0.12);
-  }
+      100% {
+        transform: translate(18px, -10px) scale(1.03);
+        border-radius: 55% 45% 42% 68%/66% 34% 66% 44%
+      }
+    }
 
-  .link-btn.active {
-    background: linear-gradient(135deg, rgba(136, 0, 255, 0.15), rgba(10,245,200,0.08));
-    border-color: rgba(34, 0, 255, 0.45);
-    box-shadow: 0 0 0 1px rgba(0, 149, 255, 0.2), 0 8px 32px rgba(0,200,255,0.15);
-  }
+    @keyframes blob2 {
+      0% {
+        transform: translate(0, 0) scale(1);
+        border-radius: 50% 60% 40% 70%/60% 40% 70% 50%
+      }
 
-  .icon-box {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,200,255,0.1);
-    border: 1px solid rgba(0,200,255,0.2);
-    flex-shrink: 0;
-    font-size: 18px;
-    color: var(--accent);
-    transition: all 0.25s;
-  }
-  .link-btn.active .icon-box {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-color: transparent;
-    color: #000;
-    box-shadow: 0 4px 16px var(--accent-glow);
-  }
-  .link-btn:hover .icon-box {
-    background: rgba(162, 0, 255, 0.18);
-    box-shadow: 0 0 12px rgba(93, 0, 255, 0.2);
-  }
+      40% {
+        transform: translate(-25px, 20px) scale(1.07);
+        border-radius: 70% 30% 60% 40%/40% 70% 30% 60%
+      }
 
-  .link-text { flex: 1; min-width: 0; }
-  .link-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .link-sub {
-    font-size: 11.5px;
-    color: var(--muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .link-btn.active .link-sub { color: var(--label); }
+      100% {
+        transform: translate(15px, -25px) scale(.96);
+        border-radius: 40% 60% 50% 70%/55% 45% 65% 35%
+      }
+    }
 
-  .arrow {
-    color: var(--muted);
-    font-size: 16px;
-    transition: transform 0.2s, color 0.2s;
-    flex-shrink: 0;
-  }
-  .link-btn:hover .arrow { transform: translateX(3px); color: var(--accent); }
+    @keyframes blob3 {
+      0% {
+        transform: translate(0, 0) scale(1);
+        border-radius: 60% 40% 55% 45%/50% 55% 45% 55%
+      }
 
-  /* ── Services Grid ── */
-  .services {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 16px;
-    animation: fadeIn 0.5s 0.36s ease both;
-  }
-  .services-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 14.5px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 3px;
-  }
-  .services-sub {
-    font-size: 11.5px;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-  .service-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 7px;
-    padding: 12px 6px;
-    background: rgba(0,200,255,0.04);
-    border: 1px solid rgba(0,200,255,0.1);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.25s;
-  }
-  .service-item:hover {
-    background: rgba(166, 0, 255, 0.1);
-    border-color: rgba(0, 81, 255, 0.993);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 8, 0, 0.12);
-  }
-  .service-icon {
-    font-size: 20px;
-    color: var(--accent);
-    filter: drop-shadow(0 0 6px var(--accent-glow));
-  }
-  .service-label {
-    font-size: 10px;
-    color: var(--label);
-    text-align: center;
-    line-height: 1.3;
-    font-weight: 500;
-  }
+      50% {
+        transform: translate(-20px, 15px) scale(1.05);
+        border-radius: 45% 55% 70% 30%/65% 35% 55% 45%
+      }
 
-  /* ── Divider ── */
-  .divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 20px 0 16px;
-  }
+      100% {
+        transform: translate(12px, -18px) scale(.97);
+        border-radius: 55% 45% 40% 60%/40% 60% 50% 50%
+      }
+    }
 
-  /* ── Footer ── */
-  .footer {
-    text-align: center;
-    animation: fadeIn 0.5s 0.45s ease both;
-  }
-  .footer-link {
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: 0.3px;
-    transition: color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .footer-link:hover { color: var(--accent); }
-  .footer-dot {
-    width: 5px;
-    height: 5px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: inline-block;
-    animation: blink 2s ease-in-out infinite;
-  }
-  @keyframes blink {
-    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
-  }
+    @keyframes blob4 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
 
-  /* Responsive */
-  @media (max-width: 360px) {
-    .services-grid { grid-template-columns: repeat(2, 1fr); }
-    .name { font-size: 20px; }
-    .card { padding: 28px 16px 22px; }
-  }
-  @media (min-width: 600px) {
-    .card { border-radius: 36px; padding: 44px 32px 32px; }
-  }
-  img{background-size: cover;
-  overflow: hidden;
-  margin-top: 21px;}
-</style>
+      50% {
+        transform: translate(20px, -15px) scale(1.08);
+      }
+
+      100% {
+        transform: translate(-10px, 20px) scale(.95);
+      }
+    }
+
+    /* ── CLAY MORPHISM CARD ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 430px;
+      background: linear-gradient(160deg, rgba(18, 12, 45, .92) 0%, rgba(12, 8, 32, .96) 40%, rgba(8, 5, 22, .98) 100%);
+      backdrop-filter: blur(28px) saturate(170%);
+      -webkit-backdrop-filter: blur(28px) saturate(170%);
+      border-radius: 36px;
+      border: 1px solid rgba(146, 172, 255, .2);
+      padding: 38px 22px 30px;
+      box-shadow:
+        inset 0 2px 0 rgba(184, 202, 254, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .07),
+        inset 0 0 40px rgba(146, 172, 255, .05),
+        inset 0 -2px 0 rgba(0, 0, 0, .4),
+        0 2px 0 rgba(146, 172, 255, .15),
+        0 6px 16px rgba(20, 16, 80, .28),
+        0 16px 40px rgba(5, 3, 20, .4),
+        0 32px 80px rgba(0, 0, 0, .55),
+        0 0 60px rgba(146, 172, 255, .06);
+      animation: clayRise .75s cubic-bezier(.16, 1, .3, 1) both;
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    /* Inner shimmer — static gradients, no animation cost */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -10%, rgba(146, 172, 255, .07) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 105% 105%, rgba(146, 172, 255, .05) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+      border-radius: inherit;
+    }
+
+    /* Liquid top-edge highlight — only opacity+transform animated (compositor-only) */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 8%;
+      right: 8%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(146, 172, 255, .3) 20%, rgba(184, 202, 254, .6) 50%, rgba(146, 172, 255, .3) 80%, transparent);
+      border-radius: 0 0 50% 50%;
+      animation: liquidShine 5s ease-in-out infinite;
+      will-change: opacity, transform;
+    }
+
+    @keyframes liquidShine {
+
+      0%,
+      100% {
+        opacity: .35;
+        transform: scaleX(.75)
+      }
+
+      50% {
+        opacity: 1;
+        transform: scaleX(1.15)
+      }
+    }
+
+    @keyframes clayRise {
+      from {
+        opacity: 0;
+        transform: translateY(48px) scale(.97)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1)
+      }
+    }
+
+    .card>* {
+      position: relative;
+      z-index: 1
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 30px
+    }
+
+    .avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 18px;
+    }
+
+    /* Spinning conic ring */
+    .avatar-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--accent-deep), var(--accent), var(--accent-hi), var(--accent), var(--accent-deep), var(--accent));
+      z-index: 0;
+      animation: spin 7s linear infinite;
+      will-change: transform;
+      box-shadow: 0 4px 12px rgba(146, 172, 255, .5), 0 8px 24px rgba(30, 24, 100, .3), inset 0 1px 0 rgba(184, 202, 254, .2);
+    }
+
+    /* Glow halo — opacity only, cheap */
+    .avatar-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(146, 172, 255, .3) 0%, rgba(30, 24, 100, .12) 50%, transparent 70%);
+      z-index: -1;
+      animation: haloPulse 3.5s ease-in-out infinite;
+      will-change: opacity, transform;
+      filter: blur(6px);
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg)
+      }
+
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    @keyframes haloPulse {
+
+      0%,
+      100% {
+        opacity: .5;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.1)
+      }
+    }
+
+    .avatar {
+      
+      position: relative;
+      z-index: 1;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 3px solid rgba(20, 0, 0, .6);
+      background: linear-gradient(135deg, #0e0929, #080520);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(184, 202, 254, .1), inset 0 -3px 6px rgba(0, 0, 0, .5), 0 4px 16px rgba(0, 0, 0, .6);
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      margin-bottom: 6px
+    }
+
+    .name {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.4px;
+      text-shadow: 0 1px 0 rgba(184, 202, 254, .15), 0 2px 8px rgba(0, 0, 0, .5);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(145deg, var(--accent-hi), var(--accent));
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 2px 0 rgba(10, 8, 50, .6), 0 4px 10px rgba(146, 172, 255, .35), inset 0 1px 0 rgba(184, 202, 254, .25);
+    }
+
+    .badge svg {
+      width: 12px;
+      height: 12px
+    }
+
+    .handle {
+      color: var(--text-soft);
+      font-size: 13.5px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      opacity: .75
+    }
+
+    .bio {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 310px;
+      margin: 0 auto;
+      opacity: .85
+    }
+
+    /* ── LINK BUTTONS — Clay + Liquid ── */
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 16px
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 17px;
+      background: linear-gradient(160deg, rgba(18, 12, 50, .7) 0%, rgba(12, 8, 35, .8) 100%);
+      /* Removed per-button backdrop-filter — card already blurs; this saves ~6 compositing layers */
+      border: 1px solid rgba(146, 172, 255, .18);
+      border-radius: var(--r);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      /* Only animate specific cheap properties */
+      transition: border-color .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.34, 1.56, .64, 1), border-radius .3s ease, background .3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: fadeSlide .5s ease both;
+      box-shadow:
+        inset 0 1px 0 rgba(184, 202, 254, .1),
+        inset 0 -1px 0 rgba(0, 0, 0, .35),
+        0 2px 4px rgba(30, 24, 100, .2),
+        0 5px 14px rgba(8, 5, 30, .28);
+    }
+
+    .link-btn:nth-child(1) {
+      animation-delay: .10s
+    }
+
+    .link-btn:nth-child(2) {
+      animation-delay: .18s
+    }
+
+    .link-btn:nth-child(3) {
+      animation-delay: .26s
+    }
+
+    .link-btn:nth-child(4) {
+      animation-delay: .34s
+    }
+
+    .link-btn:nth-child(5) {
+      animation-delay: .42s
+    }
+
+    .link-btn:nth-child(6) {
+      animation-delay: .50s
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateX(-14px) scale(.97)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1)
+      }
+    }
+
+    /* Liquid sheen — uses transform only, GPU-safe */
+    .link-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0%, rgba(146, 172, 255, .05) 25%, rgba(184, 202, 254, .1) 50%, rgba(146, 172, 255, .05) 75%, transparent 100%);
+      transform: translateX(-120%) skewX(-12deg);
+      transition: transform .7s ease;
+      pointer-events: none;
+    }
+
+    .link-btn:hover::before {
+      transform: translateX(220%) skewX(-12deg)
+    }
+
+    .link-btn:hover {
+      border-color: rgba(146, 172, 255, .45);
+      background: linear-gradient(160deg, rgba(25, 18, 70, .8) 0%, rgba(15, 10, 45, .9) 100%);
+      transform: translateY(-3px) scale(1.015);
+      border-radius: 26px;
+      box-shadow:
+        inset 0 1px 0 rgba(184, 202, 254, .18),
+        inset 0 -1px 0 rgba(0, 0, 0, .4),
+        0 3px 8px rgba(146, 172, 255, .3),
+        0 10px 24px rgba(20, 16, 80, .28),
+        0 0 0 1px rgba(146, 172, 255, .15),
+        0 0 28px rgba(146, 172, 255, .1);
+    }
+
+    .link-btn.active {
+      background: linear-gradient(160deg, rgba(28, 20, 70, .75) 0%, rgba(18, 12, 50, .85) 100%);
+      border-color: rgba(146, 172, 255, .35);
+      box-shadow:
+        inset 0 2px 0 rgba(184, 202, 254, .15),
+        inset 0 -1px 0 rgba(0, 0, 0, .4),
+        0 4px 12px rgba(146, 172, 255, .3),
+        0 12px 32px rgba(15, 10, 55, .3),
+        0 0 40px rgba(146, 172, 255, .08);
+    }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, rgba(25, 20, 80, .6), rgba(18, 14, 60, .7));
+      border: 1px solid rgba(146, 172, 255, .22);
+      flex-shrink: 0;
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), background .3s ease, border-color .3s ease, box-shadow .3s ease, border-radius .3s ease;
+      box-shadow: inset 0 1px 0 rgba(184, 202, 254, .15), inset 0 -1px 0 rgba(0, 0, 0, .4), 0 3px 8px rgba(20, 16, 80, .28);
+    }
+
+    .link-btn:hover .icon-box {
+      background: linear-gradient(145deg, rgba(80, 100, 200, .7), rgba(50, 65, 160, .8));
+      border-color: rgba(146, 172, 255, .35);
+      border-radius: 16px;
+      transform: rotate(-4deg) scale(1.08);
+      box-shadow: inset 0 1px 0 rgba(184, 202, 254, .2), inset 0 -1px 0 rgba(0, 0, 0, .4), 0 4px 14px rgba(146, 172, 255, .35), 0 0 18px rgba(146, 172, 255, .18);
+    }
+
+    .link-text {
+      flex: 1;
+      min-width: 0
+    }
+
+    .link-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+    }
+
+    .link-sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .arrow {
+      color: var(--muted);
+      font-size: 18px;
+      transition: transform .22s ease, color .22s ease;
+      flex-shrink: 0;
+    }
+
+    .link-btn:hover .arrow {
+      transform: translateX(4px);
+      color: var(--accent-hi)
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(146, 172, 255, .15) 20%, rgba(146, 172, 255, .3) 50%, rgba(146, 172, 255, .15) 80%, transparent);
+      margin: 22px 0 18px;
+      position: relative;
+    }
+
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(146, 172, 255, .6), 0 0 16px rgba(146, 172, 255, .3);
+      animation: blink 2.5s ease-in-out infinite;
+      will-change: opacity;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      animation: fadeSlide .5s .6s ease both
+    }
+
+    .footer-link {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: .4px;
+      transition: color .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-link:hover {
+      color: var(--accent-hi)
+    }
+
+    .footer-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+      animation: blink 2s ease-in-out infinite;
+      will-change: opacity;
+      box-shadow: 0 0 6px rgba(146, 172, 255, .7);
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .25
+      }
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:360px) {
+      .name {
+        font-size: 19px
+      }
+
+      .card {
+        padding: 28px 16px 22px
+      }
+    }
+
+    @media(min-width:600px) {
+      .card {
+        border-radius: 40px;
+        padding: 46px 34px 34px
+      }
+    }
+
+    /* Reduce motion — respect user preference */
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="card">
+  <!-- Liquid morphing background blobs -->
+  <div class="liquid-bg" aria-hidden="true">
+    <div class="liq-blob liq-blob-1"></div>
+    <div class="liq-blob liq-blob-2"></div>
+    <div class="liq-blob liq-blob-3"></div>
+    <div class="liq-blob liq-blob-4"></div>
+  </div>
 
-  <!-- Header -->
-  <div class="header">
-    <div class="avatar-wrap">
-      <div class="avatar-placeholder"><img src="Screenshot_20260511_172249_Chrome-2.jpg" alt=""></div>
+  <div class="card">
+
+    <div class="header">
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <img src="jms.jpg" alt="Kaleab Abera" width="96" height="96" loading="eager" decoding="async">
+        </div>
+      </div>
+      <div class="name-row">
+        <span class="name">Kaleab Abera</span>
+        <span class="badge" aria-label="Verified">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 13l4 4L19 7" stroke="#0e0929" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+      <p class="handle">@kaleab.jms</p>
+      <p class="bio">Website Developer<br>Crafting sleek, responsive websites with fluid animations and engaging user experiences. Bringing code to life.</p>
     </div>
-    <div class="name-row">
-      <span class="name">Kaleab Abera</span>
-      <span class="badge">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M5 13l4 4L19 7" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-    </div>
-    <p class="title">Website Developer &amp; Video editor</p>
-    <p class="companies">
-      <span class="sep">·</span>
-      <span>AK Digital Marketing</span>
-      <span class="sep">·</span>
-      <span></span>
-      <span class="sep"></span>
-    </p>
-  </div>
 
-  <!-- Links -->
-  <div class="links">
+    <div class="links">
 
-    <a href="#" class="link-btn" onclick="handleSave(event)">
-      <div class="icon-box">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">Save my contact</div>
-        <div class="link-sub">One-tap save to phone</div>
-      </div>
-      <span class="arrow">›</span>
-    </a>
-
-    <a href="https://thatsthepubgguy-beep.github.io/portifolio/" target="_blank" class="link-btn active">
-      <div class="icon-box">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="2" y1="12" x2="22" y2="12"/>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">AK Digital Marketing</div>
-        <div class="link-sub">Custom websites &amp; digital solutions</div>
-      </div>
-      <span class="arrow">›</span>
-    </a>
-
-    <a href="https://thatsthepubgguy-beep.github.io/portifolio/" class="link-btn">
-      <div class="icon-box">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
-        </svg>
-      </div>
-      <div class="link-text">
-        <div class="link-title">My portifolio</div>
-        <div class="link-sub">click</div>
-      </div>
-      <span class="arrow">›</span>
-    </a>
-
-  </div>
-
-  <!-- Services -->
-  <div class="services">
-    <div class="services-title">My Services</div>
-    <div class="services-sub">What I can build for you</div>
-    <div class="services-grid">
-
-      <div class="service-item">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      <a href="https://thatsthepubgguy-beep.github.io/portifolio/" target="_blank" rel="noopener noreferrer"
+        class="link-btn active">
+        <div class="icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-hi)">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
           </svg>
         </div>
-        <span class="service-label">Website Design</span>
-      </div>
+        <div class="link-text">
+          <div class="link-title">My Portfolio</div>
+          <div class="link-sub">Kaleab Abera</div>
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
-      <div class="service-item">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"/>
-            <polyline points="8 6 2 12 8 18"/>
+      <a href="https://www.instagram.com/kaleab.jms/" target="_blank" rel="noopener noreferrer" class="link-btn">
+        <div class="icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-hi)">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
           </svg>
         </div>
-        <span class="service-label">Portifolio websites</span>
-      </div>
+        <div class="link-text">
+          <div class="link-title">Instagram</div>
+          <div class="link-sub">@kaleab.jms</div>
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
-      <div class="service-item">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 0 1-8 0"/>
+      <a href="https://www.tiktok.com/@ak_digital.marketing?is_from_webapp=1&sender_device=pc" target="_blank"
+        rel="noopener noreferrer" class="link-btn">
+        <div class="icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-hi)">
+            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
           </svg>
         </div>
-        <span class="service-label">Digital Business cards</span>
-      </div>
+        <div class="link-text">
+          <div class="link-title">TikTok</div>
+          <div class="link-sub">@ak_digital.marketing</div>
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
-      <div class="service-item">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      <a href="#" target="_blank" rel="noopener noreferrer" class="link-btn">
+        <div class="icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-hi)">
+            <path
+              d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
           </svg>
         </div>
-        <span class="service-label">Motion Graphic videos</span>
-      </div>
+        <div class="link-text">
+          <div class="link-title">YouTube</div>
+          <div class="link-sub">Kaleab Abera</div>
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+
+      <a href="https://t.me/ak_digital_mkt" target="_blank" rel="noopener noreferrer" class="link-btn">
+        <div class="icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-hi)">
+            <path
+              d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-16.03 6.653a2.24 2.24 0 0 0 .104 4.218l3.74 1.227 1.865 5.798a2.24 2.24 0 0 0 4.068.002l1.865-5.797 3.74-1.228a2.242 2.242 0 0 0 1.57-2.13V4.677a2.242 2.242 0 0 0-2.4-2.244zM9.3 13.52l-.673 2.093-.98-3.05 5.146-3.37-3.493 4.327z" />
+          </svg>
+        </div>
+        <div class="link-text">
+          <div class="link-title">Telegram</div>
+          <div class="link-sub">@ak_digital_mkt</div>
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+
+      <a href="#" class="link-btn" onclick="handleSave(event)">
+        <div class="icon-box" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-hi)">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div class="link-text">
+          <div class="link-title">Save My Contact</div>
+          <div class="link-sub">Add to your phone</div>
+        </div>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
 
     </div>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <div class="footer">
+      <a href="https://thatsthepubgguy-beep.github.io/portifolio/" target="_blank" rel="noopener noreferrer"
+        class="footer-link">
+        <span class="footer-dot" aria-hidden="true"></span>
+        KALEAB ABERA
+      </a>
+    </div>
+
   </div>
-
-  <div class="divider"></div>
-
-  <!-- Footer -->
-  <div class="footer">
-    <a href="portifolio" target="_blank" class="footer-link">
-      <span class="footer-dot"></span>
-      AK Digital Marketing
-    </a>
-  </div>
-
-</div>
 
 <script>
   function handleSave(e) {
     e.preventDefault();
-    // vCard content
-    const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:Kaleab Abera\nTITLE:Website Developer & Vedio editor\nCONTACT:+251933818601\nORG:AK Digital Marketing\nURL:https://thatsthepubgguy-beep.github.io/portifolio\nEND:VCARD`;
+    const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:Kaleab Abera
+TITLE:Website Developer & Designer
+TEL:+251933818601
+ORG:AK Digital Marketing
+URL:https://thatsthepubgguy-beep.github.io/portifolio/
+END:VCARD`;
     const blob = new Blob([vcard], { type: 'text/vcard' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Kaleab abera.vcf';
+    a.download = 'KALEAB.vcf';
     a.click();
     URL.revokeObjectURL(url);
   }
 </script>
 </body>
+
 </html>
